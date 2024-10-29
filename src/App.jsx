@@ -1,6 +1,7 @@
 import './App.css'
 import DateCalculator from './components/Data2Calc'
 import TimeCalculator from './components/TimeCalc'
+import GematriaCalculator from './components/Word'
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     <>
   <DateCalculator />
   <TimeCalculator />
+  <GematriaCalculator />
     </>
   )
 }
