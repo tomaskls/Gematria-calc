@@ -23,9 +23,10 @@ export const HistorySection = ({ history, clearHistory }) => {
               </span>
             </div>
             <div className="text-sm text-gray-600 space-x-4">
-              <span>Hebrajų: {entry.values.hebrew}</span>
-              <span>Anglų: {entry.values.english}</span>
-              <span>Paprasta: {entry.values.simple}</span>
+              <span>Ordinal: {entry.values.ordinal}</span>
+              <span>Reduction: {entry.values.reduction}</span>
+              <span>Reverse: {entry.values.reverse}</span>
+              <span>Reverse Reduction: {entry.values.reverseReduction}</span>
             </div>
           </div>
         ))}
@@ -39,9 +40,10 @@ HistorySection.propTypes = {
     word: PropTypes.string.isRequired,
     timestamp: PropTypes.string.isRequired,
     values: PropTypes.shape({
-      hebrew: PropTypes.number.isRequired,
-      english: PropTypes.number.isRequired,
-      simple: PropTypes.number.isRequired
+      ordinal: PropTypes.number.isRequired,
+      reduction: PropTypes.number.isRequired,
+      reverse: PropTypes.number.isRequired,
+      reverseReduction: PropTypes.number.isRequired
     }).isRequired
   })).isRequired,
   clearHistory: PropTypes.func.isRequired

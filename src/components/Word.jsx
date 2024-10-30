@@ -1,26 +1,15 @@
-import { useState, useEffect } from 'react';
-import { hebrewGematria, englishGematria, simpleGematria } from './GematriaConstants';
-import { HistorySection } from './HistorySection';
+import { useState } from 'react';
 import { InputSection } from './InputSection';
 import { LetterGrid } from './LetterGrid';
 import { ResultCards } from './ResultCards';
 import { TabGroup } from './TabGroup';
+import { Ordinal, Reduction, Reverse, ReverseReduction } from './GematriaConstants';
+import { useHistory } from './useHistory';
 
 const GematriaCalculator = () => {
   const [word, setWord] = useState('');
-  const [history, setHistory] = useState([]);
-  const [activeTab, setActiveTab] = useState('hebrew');
-
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('gematriaHistory');
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('gematriaHistory', JSON.stringify(history));
-  }, [history]);
+  const [activeTab, setActiveTab] = useState('ordinal');
+  const { addToHistory } = useHistory();
 
   const calculateGematria = (word, system) => {
     return word.toLowerCase().split('')
@@ -33,36 +22,39 @@ const GematriaCalculator = () => {
         word: word,
         timestamp: new Date().toISOString(),
         values: {
-          hebrew: calculateGematria(word, hebrewGematria),
-          english: calculateGematria(word, englishGematria),
-          simple: calculateGematria(word, simpleGematria)
+          ordinal: calculateGematria(word, Ordinal),
+          reduction: calculateGematria(word, Reduction),
+          reverse: calculateGematria(word, Reverse),
+          reverseReduction: calculateGematria(word, ReverseReduction)
         }
       };
-      setHistory([newEntry, ...history]);
+      addToHistory(newEntry);
       setWord('');
     }
   };
 
   const getActiveSystem = () => {
     switch(activeTab) {
-      case 'hebrew': return hebrewGematria;
-      case 'english': return englishGematria;
-      case 'simple': return simpleGematria;
-      default: return hebrewGematria;
+      case 'ordinal': return Ordinal;
+      case 'reduction': return Reduction;
+      case 'reverse': return Reverse;
+      case 'reverseReduction': return ReverseReduction;
+      default: return Ordinal;
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto my-5 p-5 bg-white rounded-lg shadow-md">
+    <div className="min-w-2xl mx-auto my-5 p-5 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-5 text-gray-800">Gematria Skaičiuoklė</h1>
 
       <InputSection word={word} setWord={setWord} saveWord={saveWord} />
 
       <ResultCards 
         word={word}
-        hebrewValue={calculateGematria(word, hebrewGematria)}
-        englishValue={calculateGematria(word, englishGematria)}
-        simpleValue={calculateGematria(word, simpleGematria)}
+        ordinalValue={calculateGematria(word, Ordinal)}
+        reductionValue={calculateGematria(word, Reduction)}
+        reverseValue={calculateGematria(word, Reverse)}
+        reverseReductionValue={calculateGematria(word, ReverseReduction)}
       />
 
       {word && (
@@ -74,13 +66,6 @@ const GematriaCalculator = () => {
             systemType={activeTab}
           />
         </>
-      )}
-
-      {history.length > 0 && (
-        <HistorySection 
-          history={history}
-          clearHistory={() => setHistory([])}
-        />
       )}
     </div>
   );
